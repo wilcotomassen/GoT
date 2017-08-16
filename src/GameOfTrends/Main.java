@@ -49,7 +49,7 @@ public class Main extends PApplet {
 				
 				xoff = xoff + .01f;
 				float y = noise(xoff) * -50f;
-				s.vertex(j, y, j * .2f); 
+				s.vertex(j, y, i * .2f); 
 			}
 			s.endShape();
 			lines.add(s);
