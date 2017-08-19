@@ -21,10 +21,13 @@ public class Main extends PApplet {
 	public void settings() {
 		size(1920, 1080, P3D);
 		smooth(8);
+		
 		applet = this;
 	}
 	
 	public void setup() {
+		frameRate(1000);
+		
 		// Init Ani library
 		Ani.init(this);
 		Ani.noAutostart();

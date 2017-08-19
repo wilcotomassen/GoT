@@ -16,16 +16,16 @@ public class GameLevelRenderer {
 	private HashMap<Float, String> sourceDataGraphKeys;
 	
 	private final float DATAPOINT_WIDTH = 5;
-	private float cameraDeltaX = 0;
+	private float currentX = 0;
 	
 	public void setup(SourceDataSeries sourceData) {
-		cameraDeltaX = 0;
+		currentX = 0;
 		
 		this.sourceData = sourceData;
 		sourceDataGraph = sourceData.getGraph(
 				0, sourceData.getRangeMax(), 
 				0, -50, 
-				1, 
+				-1f, 
 				DATAPOINT_WIDTH, 
 				PColor.color(255, 0, 0));
 		
@@ -47,8 +47,8 @@ public class GameLevelRenderer {
 	}
 	
 	public void update() {
-		// Move camera
-		cameraDeltaX += .1f;
+		// Update x
+		currentX += .1f;
 	}
 	
 	public void draw(PGraphics g) {
@@ -56,8 +56,8 @@ public class GameLevelRenderer {
 		
 		// Setup camera
 		g.camera(
-				50.0f + cameraDeltaX, 0, 80,	// Eye position
-				cameraDeltaX, -25f, 0f, 			// Look at position
+				50.0f + currentX, 0, 80,	// Eye position
+				currentX, -25f, 0f, 			// Look at position
 				0.0f, 1.0f, 0.0f);				// Rotation
 		g.perspective(
 			PConstants.PI / 4.0f, // FOV
@@ -73,6 +73,10 @@ public class GameLevelRenderer {
 		drawWall(g);
 		drawSourceGraph(g);
 		
+		// Mask
+		g.noStroke();
+		g.fill(35);
+		g.rect(currentX, 1, 80, -80);
 		
 		// Draw UI
 		drawUI(g);
@@ -84,12 +88,12 @@ public class GameLevelRenderer {
 		
 		g.stroke(15, 100, 90);
 		for (int y = 0; y > -50; y -= 5) {
-			g.line(0, y, -1, 1000, y, -1);
+			g.line(0, y, -2f, currentX, y, -.01f);
 		}
 		
 		g.popStyle();
 	}
-	
+
 	private void drawSourceGraph(PGraphics g) {
 		g.pushStyle();
 		
@@ -102,7 +106,9 @@ public class GameLevelRenderer {
 		g.fill(255);
 		g.textAlign(PConstants.CENTER, PConstants.TOP);
 		for (Entry<Float, String> e: sourceDataGraphKeys.entrySet()) {
-			g.text(e.getValue(), e.getKey(), 2);
+			if (e.getKey() > currentX - 200 && e.getKey() < currentX) {
+				g.text(e.getValue(), e.getKey(), 2);
+			}
 		}
 		
 		g.popStyle();
