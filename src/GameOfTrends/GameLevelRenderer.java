@@ -130,7 +130,7 @@ public class GameLevelRenderer {
 		g.textMode(PConstants.SHAPE);
 		g.textSize(12);
 		g.fill(255);
-		g.text(Main.applet.frameRate, 100, 100);
+		g.text(Main.fps, 100, 100);
 		g.text(String.valueOf(1f - (float) Main.applet.mouseY / (float) Main.applet.height), 100, 120);
 		
 		// Re-enable 3D

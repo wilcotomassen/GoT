@@ -21,7 +21,12 @@ public class Main extends PApplet {
 	ArrayList<PShape> lines = new ArrayList<>();
 	ArrayList<Integer> lineColors = new ArrayList<>();
 	
+	// Game loop members
 	private long lastLoopTime = System.nanoTime();
+	private int fpsCounter = 0;
+	private long lastFpsTime;
+	public static int fps = 0;
+	
 	private GameLevelRenderer levelRenderer;
 	
 	public void settings() {
@@ -88,6 +93,18 @@ public class Main extends PApplet {
 		long updateLength = now - lastLoopTime;
 		lastLoopTime = now;
 		double delta = updateLength / ((double) OPTIMAL_TIME);
+		
+		// update the frame counter
+		lastFpsTime += updateLength;
+		fpsCounter++;
+
+		// Update fps if a second has passed since
+		// we last recorded
+		if (lastFpsTime >= 1000000000) {
+			fps = fpsCounter;
+			lastFpsTime = 0;
+			fpsCounter = 0;
+		}
 		
 		// Update game logic/physics
 		levelRenderer.update(delta);
