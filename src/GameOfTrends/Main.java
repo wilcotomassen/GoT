@@ -11,11 +11,17 @@ import processing.core.PShape;
 
 public class Main extends PApplet {
 	
+	// Constants
+	private final int TARGET_FPS = 60;
+	private final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;
+	
+	// Statics
 	public static PApplet applet;
 	
 	ArrayList<PShape> lines = new ArrayList<>();
 	ArrayList<Integer> lineColors = new ArrayList<>();
 	
+	private long lastLoopTime = System.nanoTime();
 	private GameLevelRenderer levelRenderer;
 	
 	public void settings() {
@@ -26,7 +32,10 @@ public class Main extends PApplet {
 	}
 	
 	public void setup() {
-		frameRate(1000);
+		
+		// Framerate is limited in draw loop, so make sure this is more than TARGET_FPS 
+		// to give the machine a fighting change of reaching it
+		frameRate(TARGET_FPS * 2); 
 		
 		// Init Ani library
 		Ani.init(this);
@@ -73,8 +82,28 @@ public class Main extends PApplet {
 	}
 	
 	public void draw() {
-		levelRenderer.update();
+		
+		// Game loop bookkeeping
+		long now = System.nanoTime();
+		long updateLength = now - lastLoopTime;
+		lastLoopTime = now;
+		double delta = updateLength / ((double) OPTIMAL_TIME);
+		
+		// Update game logic/physics
+		levelRenderer.update(delta);
+		
+		// Render
 		levelRenderer.draw(g);
+		
+		// Wait until end of frame
+		try {
+			long timeoutVal = (lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1000000;
+			if (timeoutVal > 0) {
+				Thread.sleep(timeoutVal);
+			}
+		} catch (InterruptedException e) {
+			System.err.println("Thread sleep issue");
+		}
 	}
 	
 	public static void main(String[] args) {

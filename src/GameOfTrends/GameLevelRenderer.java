@@ -46,9 +46,9 @@ public class GameLevelRenderer {
 		
 	}
 	
-	public void update() {
+	public void update(double delta) {
 		// Update x
-		currentX += .1f;
+		currentX += .1f * delta;
 	}
 	
 	public void draw(PGraphics g) {
