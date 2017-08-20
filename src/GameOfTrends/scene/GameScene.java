@@ -1,5 +1,6 @@
 package GameOfTrends.scene;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -10,26 +11,29 @@ import GameOfTrends.SourceDataSeries;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PShape;
+import processing.core.PVector;
 
 public class GameScene extends Scene {
 	
 	private SourceDataSeries sourceData;
 	private PShape sourceDataGraph;
+	private PShape playerGraph;
 	private HashMap<Float, String> sourceDataGraphKeys;
 	
 	private final float DATAPOINT_WIDTH = 5;
 	private float currentX = 0;
+	private PVector prevPlayerGraphPoint;
+	private ArrayList<PVector> playerPoints = new ArrayList<>(500);
 	
 	public void setup(SourceDataSeries sourceData) {
-		currentX = 0;
-		
+
 		this.sourceData = sourceData;
 		sourceDataGraph = sourceData.getGraph(
 				0, sourceData.getRangeMax(), 
 				0, -50, 
 				-1f, 
 				DATAPOINT_WIDTH, 
-				PColor.color(255, 0, 0));
+				PColor.color(255, 255, 0));
 		
 		sourceDataGraphKeys = new HashMap<>();
 		HashMap<Integer, String> sourceDataKeys = sourceData.getKeys();
@@ -40,17 +44,44 @@ public class GameScene extends Scene {
 		
 	}
 	
-	public void start() {
+	@Override
+	public void onEnter() {
+		currentX = 0;
 		
-	}
-	
-	public void stop() {
+		playerGraph = Main.applet.createShape(PConstants.GROUP);
+		
+		playerPoints.clear();
 		
 	}
 	
 	public void update(double delta) {
 		// Update x
-		currentX += .1f * delta;
+		currentX += .4f * delta;
+		
+		// Update player graph
+		float y = (1f - (float) Main.applet.mouseY / (float) Main.applet.height) * -50f;
+		playerPoints.add(new PVector(currentX, y, -1));
+//		PShape newLine = Main.applet.createShape();
+//		newLine.beginShape();
+//		newLine.stroke(255, 0, 0);
+//		newLine.strokeWeight(4);
+//		newLine.noFill();
+//		newLine.vertex(
+//				prevPlayerGraphPoint.x, 
+//				prevPlayerGraphPoint.y,
+//				-1f);
+//		newLine.vertex(
+//				currentX, 
+//				y,
+//				-1f);
+//		newLine.endShape();
+//		playerGraph.addChild(newLine);
+//		
+//		System.out.println(currentX + " : " + y);
+//		
+//		prevPlayerGraphPoint.x = currentX;
+//		prevPlayerGraphPoint.y = y;
+		
 	}
 	
 	public void draw(PGraphics g) {
@@ -74,6 +105,7 @@ public class GameScene extends Scene {
 		// Draw wall and source graph
 		drawWall(g);
 		drawSourceGraph(g);
+		drawPlayerGraph(g);
 		
 		// Mask
 		g.noStroke();
@@ -90,7 +122,7 @@ public class GameScene extends Scene {
 		
 		g.stroke(15, 100, 90);
 		for (int y = 0; y > -50; y -= 5) {
-			g.line(0, y, -2f, currentX, y, -.01f);
+			g.line(0, y, -3f, currentX, y, -3f);
 		}
 		
 		g.popStyle();
@@ -117,7 +149,25 @@ public class GameScene extends Scene {
 	}
 	
 	private void drawPlayerGraph(PGraphics g) {
+		g.pushStyle();
 		
+		// Draw player graph
+		g.stroke(255, 0, 255);
+		g.strokeWeight(4);
+		PVector prevPoint = null;
+		for (PVector p: playerPoints) {
+			if (prevPoint != null) {
+				g.line(prevPoint.x, prevPoint.y, prevPoint.z, 
+						p.x, p.y, p.z);
+			}
+			prevPoint = p;
+		}
+		
+		//@todo: we can clear the first part of the points
+		// list, to save performance on drawing: just keep n
+		// points in the list
+		
+		g.popStyle();
 	}
 	
 	private void drawUI(PGraphics g) {
