@@ -1,10 +1,14 @@
 package GameOfTrends;
 
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.HashMap;
 
 import com.cleverfranke.util.FileSystem;
 
+import GameOfTrends.scene.GameScene;
+import GameOfTrends.scene.IntroScene;
+import GameOfTrends.scene.Scene;
+import GameOfTrends.scene.SceneType;
 import de.looksgood.ani.Ani;
 import processing.core.PApplet;
 import processing.core.PShape;
@@ -27,7 +31,10 @@ public class Main extends PApplet {
 	private long lastFpsTime;
 	public static int fps = 0;
 	
-	private GameLevelRenderer levelRenderer;
+	// Scene management
+	private HashMap<SceneType, Scene> scenes = new HashMap<>();	// All available scenes
+	private Scene currentScene;									// Current scene
+	private static SceneType nextScene = null;					// Flag for transitioning to the next scene, null if no switch is required
 	
 	public void settings() {
 		size(1920, 1080, P3D);
@@ -51,9 +58,13 @@ public class Main extends PApplet {
 		SourceDataSeries sourceData = new SourceDataSeries();
 		sourceData.loadData(FileSystem.getApplicationPath("data/exampleseries.csv"));
 		
-		// Setup game renderer
-		levelRenderer  = new GameLevelRenderer();
-		levelRenderer.setup(sourceData);
+		// Setup scenes
+		scenes.put(IntroScene.type(), new IntroScene());
+		GameScene game = new GameScene();
+		game.setup(sourceData);
+		scenes.put(GameScene.type(), game);
+		
+		gotoScene(SceneType.Intro);
 		
 		// Setup palette
 //		lineColors.add(color(25, 250, 50));
@@ -88,6 +99,12 @@ public class Main extends PApplet {
 	
 	public void draw() {
 		
+		// Handle scene switching 
+		if (nextScene != null) {
+			gotoScene(nextScene);
+			nextScene = null;
+		}
+		
 		// Game loop bookkeeping
 		long now = System.nanoTime();
 		long updateLength = now - lastLoopTime;
@@ -107,10 +124,10 @@ public class Main extends PApplet {
 		}
 		
 		// Update game logic/physics
-		levelRenderer.update(delta);
+		currentScene.update(delta);
 		
 		// Render
-		levelRenderer.draw(g);
+		currentScene.draw(g);
 		
 		// Wait until end of frame
 		try {
@@ -121,6 +138,25 @@ public class Main extends PApplet {
 		} catch (InterruptedException e) {
 			System.err.println("Thread sleep issue");
 		}
+		
+	
+	}
+	
+	public static void triggerNextScene(SceneType type) {
+		nextScene = type;
+	}
+	
+	private void gotoScene(SceneType type) {
+		
+		// Exit current scene
+		if (currentScene != null) {
+			currentScene.onExit();
+		}
+		
+		// Enter new scene
+		currentScene = scenes.get(type);
+		currentScene.onEnter();
+		
 	}
 	
 	public static void main(String[] args) {

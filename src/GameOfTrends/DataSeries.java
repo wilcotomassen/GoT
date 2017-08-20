@@ -14,7 +14,7 @@ public class DataSeries {
 		return values.iterator();
 	}
 	
-	protected PShape getGraph(float yDataMin, float yDataMax, float yPosMin, float yPosMax, float z, float xWidth, int color) {
+	public PShape getGraph(float yDataMin, float yDataMax, float yPosMin, float yPosMax, float z, float xWidth, int color) {
 		
 		PShape s = Main.applet.createShape();
 		s.beginShape();

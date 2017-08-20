@@ -1,15 +1,17 @@
-package GameOfTrends;
+package GameOfTrends.scene;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
 
 import com.cleverfranke.util.PColor;
 
+import GameOfTrends.Main;
+import GameOfTrends.SourceDataSeries;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PShape;
 
-public class GameLevelRenderer {
+public class GameScene extends Scene {
 	
 	private SourceDataSeries sourceData;
 	private PShape sourceDataGraph;
@@ -155,6 +157,10 @@ public class GameLevelRenderer {
 		g.line(0, 0, 0, 0, 0, 10);
 		
 		g.popStyle();
+	}
+
+	public static SceneType type() {
+		return SceneType.Game;
 	}
 
 }
