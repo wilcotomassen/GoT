@@ -15,14 +15,14 @@ import processing.core.PVector;
 
 public class GameScene extends Scene {
 	
+	private final float DATAPOINT_WIDTH = 5;
+	
 	private SourceDataSeries sourceData;
 	private PShape sourceDataGraph;
-	private PShape playerGraph;
 	private HashMap<Float, String> sourceDataGraphKeys;
 	
-	private final float DATAPOINT_WIDTH = 5;
+	
 	private float currentX = 0;
-	private PVector prevPlayerGraphPoint;
 	private ArrayList<PVector> playerPoints = new ArrayList<>(500);
 	
 	public void setup(SourceDataSeries sourceData) {
@@ -47,11 +47,7 @@ public class GameScene extends Scene {
 	@Override
 	public void onEnter() {
 		currentX = 0;
-		
-		playerGraph = Main.applet.createShape(PConstants.GROUP);
-		
 		playerPoints.clear();
-		
 	}
 	
 	public void update(double delta) {
@@ -61,26 +57,6 @@ public class GameScene extends Scene {
 		// Update player graph
 		float y = (1f - (float) Main.applet.mouseY / (float) Main.applet.height) * -50f;
 		playerPoints.add(new PVector(currentX, y, -1));
-//		PShape newLine = Main.applet.createShape();
-//		newLine.beginShape();
-//		newLine.stroke(255, 0, 0);
-//		newLine.strokeWeight(4);
-//		newLine.noFill();
-//		newLine.vertex(
-//				prevPlayerGraphPoint.x, 
-//				prevPlayerGraphPoint.y,
-//				-1f);
-//		newLine.vertex(
-//				currentX, 
-//				y,
-//				-1f);
-//		newLine.endShape();
-//		playerGraph.addChild(newLine);
-//		
-//		System.out.println(currentX + " : " + y);
-//		
-//		prevPlayerGraphPoint.x = currentX;
-//		prevPlayerGraphPoint.y = y;
 		
 	}
 	
