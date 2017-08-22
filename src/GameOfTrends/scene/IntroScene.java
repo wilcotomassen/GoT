@@ -8,15 +8,23 @@ import processing.core.PImage;
 
 public class IntroScene extends Scene {
 	
-	PImage background;
+	private PImage background;
+	private float timer = 0;
 	
 	public IntroScene() {
 		background = Main.applet.loadImage(FileSystem.getApplicationPath("gfx/intro-bg.png"));
 	}
-
+	
+	@Override
+	public void onEnter() {
+		timer = 0;
+	}
+	
 	@Override
 	public void update(double delta) {
-		if (Main.applet.keyPressed) {
+		
+		timer += delta;
+		if (timer > 100f &&  Main.self.buttonDown) {
 			Main.triggerNextScene(SceneType.Game);
 		}
 	}

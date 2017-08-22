@@ -6,10 +6,7 @@ import java.util.HashMap;
 
 import com.cleverfranke.util.FileSystem;
 
-import GameOfTrends.scene.GameScene;
-import GameOfTrends.scene.IntroScene;
-import GameOfTrends.scene.Scene;
-import GameOfTrends.scene.SceneType;
+import GameOfTrends.scene.*;
 import de.looksgood.ani.Ani;
 import processing.core.PApplet;
 import processing.core.PShape;
@@ -76,7 +73,8 @@ public class Main extends PApplet {
 		GameScene game = new GameScene();
 		game.setup(sourceData);
 		scenes.put(GameScene.type(), game);
-		gotoScene(SceneType.Game);
+		scenes.put(EndScene.type(), new EndScene());
+		gotoScene(SceneType.Intro);
 		
 		// Setup painting device defaults 
 		ellipseMode(RADIUS);
