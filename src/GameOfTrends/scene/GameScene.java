@@ -15,8 +15,8 @@ public class GameScene extends Scene {
 	
 	private final float DATAPOINT_WIDTH = 5;
 	private final float WALL_Z = 0;
-	private final float SOURCE_Z = 3;
-	private final float PLAYER_Z = 6;
+	private final float SOURCE_Z = 10;
+	private final float PLAYER_Z = 20;
 	
 	public SourceDataSeries sourceData;
 	private PShape sourceDataGraph;
@@ -91,12 +91,23 @@ public class GameScene extends Scene {
 		);
 		
 		// Draw gizmo
-		drawGizmo(g);
+//		drawGizmo(g);
 		
 		// Draw wall and source graph
 		drawWall(g);
 		drawSourceGraph(g);
 		drawPlayerGraph(g);
+		
+		// Draw guess moment
+		g.pushMatrix();
+		g.pushStyle();
+		g.translate(scoreStartX,  0, 10);
+		g.noFill();
+		g.strokeWeight(4);
+		g.stroke(255);
+		g.line(0, 0, 0, -50);
+		g.popMatrix();
+		g.popStyle();
 		
 		// Draw UI
 		drawUI(g);

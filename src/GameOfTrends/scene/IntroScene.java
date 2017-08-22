@@ -3,7 +3,6 @@ package GameOfTrends.scene;
 import com.cleverfranke.util.FileSystem;
 
 import GameOfTrends.Main;
-import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
 
@@ -28,6 +27,7 @@ public class IntroScene extends Scene {
 		if (timer > Main.SCENE_BUTTON_TIMEOUT &&  Main.self.buttonDown) {
 			Main.triggerNextScene(SceneType.Guide);
 		}
+		
 	}
 
 	@Override
