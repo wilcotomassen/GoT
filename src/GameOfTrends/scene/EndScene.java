@@ -9,6 +9,7 @@ import de.looksgood.ani.Ani;
 import de.looksgood.ani.AniSequence;
 import processing.core.PApplet;
 import processing.core.PConstants;
+import processing.core.PFont;
 import processing.core.PGraphics;
 import processing.core.PImage;
 import processing.core.PVector;
@@ -21,13 +22,17 @@ public class EndScene extends Scene {
 	private final float MAX_Y = 326;
 	
 	private PImage background;
-	private PImage foreground;
 	private float timer = 0;
 	private GameScene gameScene;
 	private ArrayList<PVector> playerPoints = new ArrayList<>(500);
 	private ArrayList<PVector> sourcePoints = new ArrayList<>();
 	
+	
 	private ArrayList<ArrayList<PVector>> historicPoints = new ArrayList<ArrayList<PVector>>();
+	
+	private PFont topFont;
+	private PFont percFont;
+	private String percString;
 	
 	// Animation props
 	private AniSequence sequence;
@@ -38,7 +43,8 @@ public class EndScene extends Scene {
 	
 	public EndScene() {
 		background = Main.applet.loadImage(FileSystem.getApplicationPath("gfx/end-bg.png"));
-		foreground = Main.applet.loadImage(FileSystem.getApplicationPath("gfx/end-fg.png"));
+		topFont = Main.applet.createFont(FileSystem.getApplicationPath("gfx/W Foundry - Sonny Gothic Condensed Regular.otf"), 120f);
+		percFont = Main.applet.createFont(FileSystem.getApplicationPath("gfx/W Foundry - Sonny Gothic Condensed Regular.otf"), 480f);
 		
 		gameScene = (GameScene) Main.self.scenes.get(GameScene.type());
 		
@@ -58,6 +64,8 @@ public class EndScene extends Scene {
 		sourceAnimProgress = 0;
 		playerAnimProgress = 0;
 		historyAnimProgress = 0;
+		
+		percString = String.valueOf(50 + Math.round(Math.random() * 44)) + "%";
 		
 		// Map source points to screen coords
 		sourcePoints.clear();
@@ -138,13 +146,16 @@ public class EndScene extends Scene {
 		}
 		
 		if (foregroundAnimProgress > .5f) {
-			g.pushMatrix();
-			g.pushStyle();
-			g.blendMode(PConstants.SCREEN);
-			g.translate(0,  0, 10);
-			g.image(foreground, 0, 0);
-			g.popStyle();
-			g.popMatrix();
+			
+			g.textAlign(PConstants.CENTER, PConstants.TOP);
+			g.fill(255);
+			g.textFont(topFont);
+			g.text("Nice try!", 0, 100, Main.applet.width, 500);
+			
+			g.fill(255);
+			g.textFont(percFont);
+			g.text(percString, 0, 200, Main.applet.width, 300);
+			
 		}
 				
 	}
