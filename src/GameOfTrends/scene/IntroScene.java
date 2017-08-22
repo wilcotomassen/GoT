@@ -37,7 +37,7 @@ public class IntroScene extends Scene {
 		g.pushStyle();
 		g.blendMode(PConstants.MULTIPLY);
 		g.noStroke();
-		g.fill(255, 0, 0);
+		g.fill(255, 0, 255);
 		g.rect(0, Main.applet.height, Main.applet.width, -Main.self.distanceValue * Main.applet.height);
 		g.popStyle();
 	}

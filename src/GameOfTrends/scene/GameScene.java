@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import com.cleverfranke.util.PColor;
-
 import GameOfTrends.Main;
 import GameOfTrends.SourceDataSeries;
 import processing.core.PConstants;

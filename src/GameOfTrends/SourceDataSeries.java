@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import processing.core.PApplet;
-import processing.core.PVector;
 import processing.data.Table;
 import processing.data.TableRow;
 
@@ -52,7 +51,7 @@ public class SourceDataSeries extends DataSeries {
 		
 		int startIndex = (int) (.8f * (float) values.size());
 		for (int i = startIndex; i < values.size(); i++) {
-			points.add(PApplet.map(values.get(i), rangeMin, rangeMax, 0, 1));
+			points.add(PApplet.map(values.get(i), 0, rangeMax, 0, 1));
 		}
 		
 		return points;

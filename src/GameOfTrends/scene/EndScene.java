@@ -19,8 +19,8 @@ public class EndScene extends Scene {
 	private ArrayList<PVector> sourcePoints = new ArrayList<>();
 	
 	private final float GRAPH_MARGIN = 100;
-	private final float MIN_Y = 0;
-	private final float MAX_Y = 300;
+	private final float MIN_Y = 300;
+	private final float MAX_Y = -400;
 	
 	public EndScene() {
 		background = Main.applet.loadImage(FileSystem.getApplicationPath("gfx/end-bg.png"));
@@ -35,19 +35,18 @@ public class EndScene extends Scene {
 		sourcePoints.clear();
 		ArrayList<Float> sourceValues = gameScene.sourceData.getLastPoints();
 		for (int i = 0; i < sourceValues.size(); i++) {
-			float x = PApplet.map(i, 0f, (float) sourceValues.size(), GRAPH_MARGIN, Main.applet.width - GRAPH_MARGIN);
+			float x = PApplet.map(i, 0f, (float) (sourceValues.size() - 1), GRAPH_MARGIN, Main.applet.width - GRAPH_MARGIN);
 			float y = PApplet.map(sourceValues.get(i), 0f, 1f, MIN_Y, MAX_Y);
 			sourcePoints.add(new PVector(x, y));
 		}
 	
-		
 		// Map player points to screen coords
 		final float minPlayerX = gameScene.playerScorePoints.get(0).x;
 		final float maxPlayerX = gameScene.playerScorePoints.get(gameScene.playerScorePoints.size() - 1).x;
 		playerPoints.clear();
 		for (PVector p: gameScene.playerScorePoints) {
 			float x = PApplet.map(p.x, minPlayerX, maxPlayerX, GRAPH_MARGIN, Main.applet.width - GRAPH_MARGIN);
-			float y = PApplet.map(p.y, -50, 0, MIN_Y, MAX_Y);
+			float y = PApplet.map(p.y, 0, -50, MIN_Y, MAX_Y);
 			playerPoints.add(new PVector(x, y));
 		}
 		

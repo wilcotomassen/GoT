@@ -51,6 +51,7 @@ public class Main extends PApplet {
 	public void settings() {
 		size(1920, 1080, P3D);
 		smooth(8);
+		fullScreen();
 		
 		applet = this;
 		self = this;
@@ -60,7 +61,7 @@ public class Main extends PApplet {
 		
 		// Framerate is limited in draw loop, so make sure this is more than TARGET_FPS 
 		// to give the machine a fighting change of reaching it
-		frameRate(TARGET_FPS * 2); 
+		frameRate(TARGET_FPS * 2);
 		
 		// Init Ani library
 		Ani.init(this);
