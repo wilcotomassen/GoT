@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import com.cleverfranke.util.FileSystem;
 
 import GameOfTrends.Main;
+import de.looksgood.ani.Ani;
+import de.looksgood.ani.AniSequence;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
@@ -12,24 +14,40 @@ import processing.core.PVector;
 
 public class EndScene extends Scene {
 	
+	// Consts
+	private final float GRAPH_MARGIN = 0;
+	private final float MIN_Y = 300;
+	private final float MAX_Y = -400;
+	
 	private PImage background;
 	private float timer = 0;
 	private GameScene gameScene;
 	private ArrayList<PVector> playerPoints = new ArrayList<>(500);
 	private ArrayList<PVector> sourcePoints = new ArrayList<>();
 	
-	private final float GRAPH_MARGIN = 100;
-	private final float MIN_Y = 300;
-	private final float MAX_Y = -400;
+	// Animation props
+	private AniSequence sequence;
+	private float sourceAnimProgress;
+	private float playerAnimProgress;
+	
 	
 	public EndScene() {
 		background = Main.applet.loadImage(FileSystem.getApplicationPath("gfx/end-bg.png"));
 		gameScene = (GameScene) Main.self.scenes.get(GameScene.type());
+		
+		sequence = new AniSequence(Main.applet);
+		sequence.beginSequence();
+		sequence.add(Ani.to(this, 1, 1, "sourceAnimProgress", 1));
+		sequence.add(Ani.to(this, 1, .3f, "playerAnimProgress", 1));
+		sequence.endSequence();
+		
 	}
 	
 	@Override
 	public void onEnter() {
 		timer = 0;
+		sourceAnimProgress = 0;
+		playerAnimProgress = 0;
 		
 		// Map source points to screen coords
 		sourcePoints.clear();
@@ -50,6 +68,8 @@ public class EndScene extends Scene {
 			playerPoints.add(new PVector(x, y));
 		}
 		
+		sequence.start();
+		
 	}
 
 	@Override
@@ -63,13 +83,14 @@ public class EndScene extends Scene {
 	@Override
 	public void draw(PGraphics g) {
 		g.image(background, 0, 0);
-		
 		g.translate(0, Main.applet.height / 2);
 		
 		// Draw source graph
 		g.stroke(Main.PALETTE_SOURCEGRAPH);
 		PVector prevPoint = null;
-		for (PVector p: sourcePoints) {
+		
+		for (int i = 0; i < Math.round(sourceAnimProgress * sourcePoints.size()) ; i++) {
+			PVector p = sourcePoints.get(i);
 			if (prevPoint != null) {
 				g.line(p.x, p.y, prevPoint.x, prevPoint.y);
 			}
@@ -79,7 +100,8 @@ public class EndScene extends Scene {
 		// Draw player graph
 		g.stroke(Main.PALETTE_PLAYERGRAPH);
 		prevPoint = null;
-		for (PVector p: playerPoints) {
+		for (int i = 0; i < Math.round(playerAnimProgress * playerPoints.size()) ; i++) {
+			PVector p = playerPoints.get(i);
 			if (prevPoint != null) {
 				g.line(p.x, p.y, prevPoint.x, prevPoint.y);
 			}

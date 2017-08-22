@@ -189,7 +189,6 @@ public class GameScene extends Scene {
 		g.textSize(12);
 		g.fill(255);
 		g.text(Main.fps, 100, 100);
-		g.text(String.valueOf(1f - (float) Main.applet.mouseY / (float) Main.applet.height), 100, 120);
 		
 		// Re-enable 3D
 		g.hint(PConstants.ENABLE_DEPTH_TEST);
