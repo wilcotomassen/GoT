@@ -54,7 +54,7 @@ public class Main extends PApplet {
 	public void settings() {
 		size(1920, 1080, P3D);
 		smooth(8);
-		fullScreen();
+//		fullScreen();
 		
 		
 		applet = this;

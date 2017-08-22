@@ -27,6 +27,7 @@ public class EndScene extends Scene {
 	private ArrayList<PVector> playerPoints = new ArrayList<>(500);
 	private ArrayList<PVector> sourcePoints = new ArrayList<>();
 	
+<<<<<<< HEAD
 	
 	private ArrayList<ArrayList<PVector>> historicPoints = new ArrayList<ArrayList<PVector>>();
 	
@@ -34,6 +35,10 @@ public class EndScene extends Scene {
 	private PFont percFont;
 	private String percString;
 	
+=======
+	private ArrayList<ArrayList<PVector>> historicPoints = new ArrayList<ArrayList<PVector>>();
+	
+>>>>>>> 6fb1689a6adb31d0ee2e02b3d710422135016202
 	// Animation props
 	private AniSequence sequence;
 	private float sourceAnimProgress;
@@ -64,8 +69,11 @@ public class EndScene extends Scene {
 		sourceAnimProgress = 0;
 		playerAnimProgress = 0;
 		historyAnimProgress = 0;
+<<<<<<< HEAD
 		
 		percString = String.valueOf(50 + Math.round(Math.random() * 44)) + "%";
+=======
+>>>>>>> 6fb1689a6adb31d0ee2e02b3d710422135016202
 		
 		// Map source points to screen coords
 		sourcePoints.clear();
@@ -146,6 +154,7 @@ public class EndScene extends Scene {
 		}
 		
 		if (foregroundAnimProgress > .5f) {
+<<<<<<< HEAD
 			
 			g.textAlign(PConstants.CENTER, PConstants.TOP);
 			g.fill(255);
@@ -156,6 +165,15 @@ public class EndScene extends Scene {
 			g.textFont(percFont);
 			g.text(percString, 0, 200, Main.applet.width, 300);
 			
+=======
+			g.pushMatrix();
+			g.pushStyle();
+			g.blendMode(PConstants.SCREEN);
+			g.translate(0,  0, 10);
+			g.image(foreground, 0, 0);
+			g.popStyle();
+			g.popMatrix();
+>>>>>>> 6fb1689a6adb31d0ee2e02b3d710422135016202
 		}
 				
 	}
