@@ -3,6 +3,7 @@ package GameOfTrends.scene;
 import com.cleverfranke.util.FileSystem;
 
 import GameOfTrends.Main;
+import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
 
@@ -32,6 +33,13 @@ public class IntroScene extends Scene {
 	@Override
 	public void draw(PGraphics g) {
 		g.image(background, 0, 0);
+		
+		g.pushStyle();
+		g.blendMode(PConstants.MULTIPLY);
+		g.noStroke();
+		g.fill(255, 0, 0);
+		g.rect(0, Main.applet.height, Main.applet.width, -Main.self.distanceValue * Main.applet.height);
+		g.popStyle();
 	}
 	
 	public static SceneType type() {
