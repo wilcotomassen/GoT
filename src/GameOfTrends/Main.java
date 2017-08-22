@@ -3,8 +3,8 @@ package GameOfTrends;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 import com.cleverfranke.util.FileSystem;
+import com.cleverfranke.util.PColor;
 
 import GameOfTrends.scene.*;
 import de.looksgood.ani.Ani;
@@ -25,6 +25,9 @@ public class Main extends PApplet {
 	public static PApplet applet;
 	public static Main self;
 	
+	public static int PALETTE_PLAYERGRAPH = PColor.color(255, 0, 255);
+	public static int PALETTE_SOURCEGRAPH = PColor.color(255, 255, 0);
+	
 	ArrayList<PShape> lines = new ArrayList<>();
 	ArrayList<Integer> lineColors = new ArrayList<>();
 	
@@ -41,7 +44,7 @@ public class Main extends PApplet {
 	public static int fps = 0;
 	
 	// Scene management
-	private HashMap<SceneType, Scene> scenes = new HashMap<>();	// All available scenes
+	public HashMap<SceneType, Scene> scenes = new HashMap<>();	// All available scenes
 	private Scene currentScene;									// Current scene
 	private static SceneType nextScene = null;					// Flag for transitioning to the next scene, null if no switch is required
 	
@@ -66,7 +69,7 @@ public class Main extends PApplet {
 		
 		// Load source data
 		SourceDataSeries sourceData = new SourceDataSeries();
-		sourceData.loadData(FileSystem.getApplicationPath("data/exampleseries.csv"));
+		sourceData.loadData(FileSystem.getApplicationPath("data/Data_privacy_2014-today-clean.csv"));
 		
 		// Setup scenes
 		scenes.put(IntroScene.type(), new IntroScene());

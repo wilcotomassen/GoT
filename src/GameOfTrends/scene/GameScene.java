@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import com.cleverfranke.util.FileSystem;
 import com.cleverfranke.util.PColor;
 
 import GameOfTrends.Main;
 import GameOfTrends.SourceDataSeries;
 import processing.core.PConstants;
 import processing.core.PGraphics;
-import processing.core.PImage;
 import processing.core.PShape;
 import processing.core.PVector;
 
@@ -22,11 +20,13 @@ public class GameScene extends Scene {
 	private final float SOURCE_Z = 3;
 	private final float PLAYER_Z = 6;
 	
-	private SourceDataSeries sourceData;
+	public SourceDataSeries sourceData;
 	private PShape sourceDataGraph;
 	private HashMap<Float, String> sourceDataGraphKeys;
 	private ArrayList<PVector> playerPoints = new ArrayList<>(500);
+	public ArrayList<PVector> playerScorePoints = new ArrayList<>(500);
 	
+	private float scoreStartX;
 	private float endX;	
 	private float currentX = 0;
 	
@@ -38,7 +38,7 @@ public class GameScene extends Scene {
 				0, -50, 
 				SOURCE_Z, 
 				DATAPOINT_WIDTH, 
-				PColor.color(255, 255, 0));
+				Main.PALETTE_SOURCEGRAPH);
 		
 		sourceDataGraphKeys = new HashMap<>();
 		HashMap<Integer, String> sourceDataKeys = sourceData.getKeys();
@@ -47,6 +47,7 @@ public class GameScene extends Scene {
 			sourceDataGraphKeys.put(x, e.getValue());
 		}
 		
+		scoreStartX = (int) ((float) sourceData.getDataPointCount() * .8f) * DATAPOINT_WIDTH;
 		endX = sourceData.getDataPointCount() * DATAPOINT_WIDTH;
 		
 	}
@@ -55,6 +56,7 @@ public class GameScene extends Scene {
 	public void onEnter() {
 		currentX = 0;
 		playerPoints.clear();
+		playerScorePoints.clear();
 	}
 	
 	public void update(double delta) {
@@ -64,6 +66,10 @@ public class GameScene extends Scene {
 		// Update player graph
 		float y = Main.self.distanceValue  * -50f;
 		playerPoints.add(new PVector(currentX, y, PLAYER_Z));
+		
+		if (currentX >= scoreStartX) {
+			playerScorePoints.add(new PVector(currentX, y, PLAYER_Z));
+		}
 		
 		if (currentX >= endX) {
 			Main.triggerNextScene(SceneType.End);
@@ -103,7 +109,7 @@ public class GameScene extends Scene {
 		g.pushStyle();
 		
 		g.stroke(15, 100, 90);
-		for (int y = 0; y > -50; y -= 5) {
+		for (int y = 0; y > -55; y -= 5) {
 			g.line(0, y, WALL_Z, currentX + 100f, y, WALL_Z);
 		}
 		
@@ -135,7 +141,7 @@ public class GameScene extends Scene {
 		g.pushStyle();
 		
 		// Draw player graph
-		g.stroke(255, 0, 255);
+		g.stroke(Main.PALETTE_PLAYERGRAPH);
 		g.strokeWeight(4);
 		PVector prevPoint = null;
 		for (PVector p: playerPoints) {
@@ -146,7 +152,7 @@ public class GameScene extends Scene {
 		}
 		
 		g.translate(0,  0, PLAYER_Z);
-		g.fill(255, 0, 255);
+		g.fill(Main.PALETTE_PLAYERGRAPH);
 		g.ellipse(prevPoint.x, prevPoint.y, .3f, .3f);
 		
 		//@todo: we can clear the first part of the points
