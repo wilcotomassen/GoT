@@ -8,6 +8,7 @@ import GameOfTrends.Main;
 import de.looksgood.ani.Ani;
 import de.looksgood.ani.AniSequence;
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
 import processing.core.PVector;
@@ -16,10 +17,11 @@ public class EndScene extends Scene {
 	
 	// Consts
 	private final float GRAPH_MARGIN = 0;
-	private final float MIN_Y = 300;
-	private final float MAX_Y = -400;
+	private final float MIN_Y = 797;
+	private final float MAX_Y = 326;
 	
 	private PImage background;
+	private PImage foreground;
 	private float timer = 0;
 	private GameScene gameScene;
 	private ArrayList<PVector> playerPoints = new ArrayList<>(500);
@@ -29,16 +31,19 @@ public class EndScene extends Scene {
 	private AniSequence sequence;
 	private float sourceAnimProgress;
 	private float playerAnimProgress;
-	
+	private float foregroundAnimProgress;
 	
 	public EndScene() {
 		background = Main.applet.loadImage(FileSystem.getApplicationPath("gfx/end-bg.png"));
+		foreground = Main.applet.loadImage(FileSystem.getApplicationPath("gfx/end-fg.png"));
+		
 		gameScene = (GameScene) Main.self.scenes.get(GameScene.type());
 		
 		sequence = new AniSequence(Main.applet);
 		sequence.beginSequence();
 		sequence.add(Ani.to(this, 1, 1, "sourceAnimProgress", 1));
 		sequence.add(Ani.to(this, 1, .3f, "playerAnimProgress", 1));
+		sequence.add(Ani.to(this, .5f, .01f, "foregroundAnimProgress", 1));
 		sequence.endSequence();
 		
 	}
@@ -83,12 +88,12 @@ public class EndScene extends Scene {
 	@Override
 	public void draw(PGraphics g) {
 		g.image(background, 0, 0);
-		g.translate(0, Main.applet.height / 2);
 		
 		// Draw source graph
 		g.stroke(Main.PALETTE_SOURCEGRAPH);
 		PVector prevPoint = null;
 		
+		g.strokeWeight(5);
 		for (int i = 0; i < Math.round(sourceAnimProgress * sourcePoints.size()) ; i++) {
 			PVector p = sourcePoints.get(i);
 			if (prevPoint != null) {
@@ -106,6 +111,18 @@ public class EndScene extends Scene {
 				g.line(p.x, p.y, prevPoint.x, prevPoint.y);
 			}
 			prevPoint = p;
+		}
+		
+		
+		if (foregroundAnimProgress > .5f) {
+			g.pushMatrix();
+			g.pushStyle();
+			g.blendMode(PConstants.SCREEN);
+			g.translate(0,  0, 10);
+			g.smooth(16);
+			g.image(foreground, 0, 0);
+			g.popStyle();
+			g.popMatrix();
 		}
 				
 	}

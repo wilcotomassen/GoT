@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import com.cleverfranke.util.FileSystem;
+
 import GameOfTrends.Main;
 import GameOfTrends.SourceDataSeries;
 import processing.core.PConstants;
 import processing.core.PGraphics;
+import processing.core.PImage;
 import processing.core.PShape;
 import processing.core.PVector;
 
@@ -15,14 +18,16 @@ public class GameScene extends Scene {
 	
 	private final float DATAPOINT_WIDTH = 5;
 	private final float WALL_Z = 0;
-	private final float SOURCE_Z = 10;
-	private final float PLAYER_Z = 20;
+	private final float SOURCE_Z = 1;
+	private final float PLAYER_Z = 2;
+	private final float LINE_Z = 5;
 	
 	public SourceDataSeries sourceData;
 	private PShape sourceDataGraph;
 	private HashMap<Float, String> sourceDataGraphKeys;
 	private ArrayList<PVector> playerPoints = new ArrayList<>(500);
 	public ArrayList<PVector> playerScorePoints = new ArrayList<>(500);
+	private PImage overlay;
 	
 	private float scoreStartX;
 	private float endX;	
@@ -45,7 +50,9 @@ public class GameScene extends Scene {
 			sourceDataGraphKeys.put(x, e.getValue());
 		}
 		
-		scoreStartX = (int) ((float) sourceData.getDataPointCount() * .8f) * DATAPOINT_WIDTH;
+		overlay = Main.applet.loadImage(FileSystem.getApplicationPath("gfx/gameplay-fg.png"));
+		
+		scoreStartX = (((float) sourceData.getDataPointCount() - 1f) * .8f) * DATAPOINT_WIDTH;
 		endX = sourceData.getDataPointCount() * DATAPOINT_WIDTH;
 		
 	}
@@ -76,7 +83,7 @@ public class GameScene extends Scene {
 	}
 	
 	public void draw(PGraphics g) {
-		g.background(35);
+		g.background(34, 0, 51);
 		
 		// Setup camera
 		g.camera(
@@ -101,11 +108,12 @@ public class GameScene extends Scene {
 		// Draw guess moment
 		g.pushMatrix();
 		g.pushStyle();
-		g.translate(scoreStartX,  0, 10);
-		g.noFill();
-		g.strokeWeight(4);
-		g.stroke(255);
-		g.line(0, 0, 0, -50);
+		g.blendMode(PConstants.ADD);
+		g.translate(scoreStartX,  20, LINE_Z); 
+		g.rotateY(PConstants.HALF_PI);
+		g.fill(255, 255, 255, 50);
+		g.noStroke();
+		g.rect(-2, 0, 10, -90);
 		g.popMatrix();
 		g.popStyle();
 		
@@ -117,7 +125,8 @@ public class GameScene extends Scene {
 	private void drawWall(PGraphics g) {
 		g.pushStyle();
 		
-		g.stroke(15, 100, 90);
+		g.strokeWeight(1);
+		g.stroke(153, 136, 255);
 		for (int y = 0; y > -55; y -= 5) {
 			g.line(0, y, WALL_Z, currentX + 100f, y, WALL_Z);
 		}
@@ -137,8 +146,10 @@ public class GameScene extends Scene {
 		g.fill(255);
 		g.textAlign(PConstants.CENTER, PConstants.TOP);
 		for (Entry<Float, String> e: sourceDataGraphKeys.entrySet()) {
-			if (e.getKey() > currentX - 200 && e.getKey() < currentX) {
-				g.text(e.getValue(), e.getKey(), 2);
+			if (e.getKey() > currentX - 200 && e.getKey() < currentX + 100) {
+				String value = e.getValue();
+				value = value.replaceAll("-", "\n");
+				g.text(value, e.getKey(), 2);
 			}
 		}
 		
@@ -167,10 +178,9 @@ public class GameScene extends Scene {
 		//@todo: we can clear the first part of the points
 		// list, to save performance on drawing: just keep n
 		// points in the list
-		while (playerPoints.size() > 300) {
+		while (playerPoints.size() > 400) {
 			playerPoints.remove(0);
 		}
-			
 		
 		g.popStyle();
 		g.popMatrix();
@@ -185,10 +195,12 @@ public class GameScene extends Scene {
 		g.ortho();
 		g.noLights();
 		
-		g.textMode(PConstants.SHAPE);
-		g.textSize(12);
-		g.fill(255);
-		g.text(Main.fps, 100, 100);
+		g.image(overlay, 0, 0);
+		
+//		g.textMode(PConstants.SHAPE);
+//		g.textSize(12);
+//		g.fill(255);
+//		g.text(Main.fps, 100, 100);
 		
 		// Re-enable 3D
 		g.hint(PConstants.ENABLE_DEPTH_TEST);

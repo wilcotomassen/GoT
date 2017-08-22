@@ -25,9 +25,9 @@ public class Main extends PApplet {
 	public static PApplet applet;
 	public static Main self;
 	
-	public static final int SCENE_BUTTON_TIMEOUT = 50;
-	public static final int PALETTE_PLAYERGRAPH = PColor.color(255, 0, 255);
-	public static final int PALETTE_SOURCEGRAPH = PColor.color(255, 255, 0);
+	public static final int SCENE_BUTTON_TIMEOUT = 20;
+	public static final int PALETTE_PLAYERGRAPH = PColor.color(255, 67, 123);
+	public static final int PALETTE_SOURCEGRAPH = PColor.color(253, 185, 52);
 	
 	ArrayList<PShape> lines = new ArrayList<>();
 	ArrayList<Integer> lineColors = new ArrayList<>();
