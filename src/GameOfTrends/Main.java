@@ -21,10 +21,12 @@ public class Main extends PApplet {
 	private final float SENSOR_MIN = 0.1f;
 	private final float SENSOR_MAX = 0.5f;
 	
+	
 	// Statics
 	public static PApplet applet;
 	public static Main self;
 	
+	public static final float SOURCEDATA_PERC = 0.75f;
 	public static final int SCENE_BUTTON_TIMEOUT = 20;
 	public static final int PALETTE_PLAYERGRAPH = PColor.color(255, 67, 123);
 	public static final int PALETTE_SOURCEGRAPH = PColor.color(253, 185, 52);
@@ -52,7 +54,7 @@ public class Main extends PApplet {
 	public void settings() {
 		size(1920, 1080, P3D);
 		smooth(8);
-		fullScreen();
+//		fullScreen();
 		
 		applet = this;
 		self = this;

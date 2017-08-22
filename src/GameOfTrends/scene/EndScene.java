@@ -27,11 +27,14 @@ public class EndScene extends Scene {
 	private ArrayList<PVector> playerPoints = new ArrayList<>(500);
 	private ArrayList<PVector> sourcePoints = new ArrayList<>();
 	
+	private ArrayList<ArrayList<PVector>> historicPoints = new ArrayList<ArrayList<PVector>>();
+	
 	// Animation props
 	private AniSequence sequence;
 	private float sourceAnimProgress;
 	private float playerAnimProgress;
 	private float foregroundAnimProgress;
+	private float historyAnimProgress;
 	
 	public EndScene() {
 		background = Main.applet.loadImage(FileSystem.getApplicationPath("gfx/end-bg.png"));
@@ -44,6 +47,7 @@ public class EndScene extends Scene {
 		sequence.add(Ani.to(this, 1, 1, "sourceAnimProgress", 1));
 		sequence.add(Ani.to(this, 1, .3f, "playerAnimProgress", 1));
 		sequence.add(Ani.to(this, .5f, .01f, "foregroundAnimProgress", 1));
+		sequence.add(Ani.to(this, 1f, 1f, "historyAnimProgress", 1));
 		sequence.endSequence();
 		
 	}
@@ -53,6 +57,7 @@ public class EndScene extends Scene {
 		timer = 0;
 		sourceAnimProgress = 0;
 		playerAnimProgress = 0;
+		historyAnimProgress = 0;
 		
 		// Map source points to screen coords
 		sourcePoints.clear();
@@ -76,6 +81,11 @@ public class EndScene extends Scene {
 		sequence.start();
 		
 	}
+	
+	@SuppressWarnings("unchecked")
+	public void onExit() {
+		historicPoints.add((ArrayList<PVector>) playerPoints.clone());
+	}
 
 	@Override
 	public void update(double delta) {
@@ -92,7 +102,6 @@ public class EndScene extends Scene {
 		// Draw source graph
 		g.stroke(Main.PALETTE_SOURCEGRAPH);
 		PVector prevPoint = null;
-		
 		g.strokeWeight(5);
 		for (int i = 0; i < Math.round(sourceAnimProgress * sourcePoints.size()) ; i++) {
 			PVector p = sourcePoints.get(i);
@@ -113,13 +122,26 @@ public class EndScene extends Scene {
 			prevPoint = p;
 		}
 		
+		// Draw history
+		g.stroke(255, 70);
+		g.strokeWeight(3);
+		for (int j = 0; j < historicPoints.size(); j++) {
+			ArrayList<PVector> hList = historicPoints.get(j);
+			prevPoint = null;
+			for (int i = 0; i < Math.round(historyAnimProgress * hList.size()) ; i++) {
+				PVector p = hList.get(i);
+				if (prevPoint != null) {
+					g.line(p.x, p.y, prevPoint.x, prevPoint.y);
+				}
+				prevPoint = p;
+			}
+		}
 		
 		if (foregroundAnimProgress > .5f) {
 			g.pushMatrix();
 			g.pushStyle();
 			g.blendMode(PConstants.SCREEN);
 			g.translate(0,  0, 10);
-			g.smooth(16);
 			g.image(foreground, 0, 0);
 			g.popStyle();
 			g.popMatrix();

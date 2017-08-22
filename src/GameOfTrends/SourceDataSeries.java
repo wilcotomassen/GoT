@@ -49,7 +49,7 @@ public class SourceDataSeries extends DataSeries {
 	public ArrayList<Float> getLastPoints() {
 		ArrayList<Float> points = new ArrayList<>();
 		
-		int startIndex = (int) (.8f * (float) values.size());
+		int startIndex = (int) (Main.SOURCEDATA_PERC * (float) values.size());
 		for (int i = startIndex; i < values.size(); i++) {
 			points.add(PApplet.map(values.get(i), 0, rangeMax, 0, 1));
 		}
