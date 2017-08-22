@@ -9,5 +9,20 @@
 	<classpathentry kind="lib" path="lib/processing/pdf.jar"/>
 	<classpathentry kind="lib" path="lib/Ani.jar"/>
 	<classpathentry kind="lib" path="lib/peasycam.jar"/>
+	<classpathentry kind="lib" path="lib/websockets/javax.servlet-api-3.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/websockets/jetty-http-9.3.6.v20151106.jar"/>
+	<classpathentry kind="lib" path="lib/websockets/jetty-io-9.3.6.v20151106.jar"/>
+	<classpathentry kind="lib" path="lib/websockets/jetty-security-9.3.6.v20151106.jar"/>
+	<classpathentry kind="lib" path="lib/websockets/jetty-server-9.3.6.v20151106.jar"/>
+	<classpathentry kind="lib" path="lib/websockets/jetty-servlet-9.3.6.v20151106.jar"/>
+	<classpathentry kind="lib" path="lib/websockets/jetty-util-9.3.6.v20151106.jar"/>
+	<classpathentry kind="lib" path="lib/websockets/slf4j-api-1.7.13.jar"/>
+	<classpathentry kind="lib" path="lib/websockets/slf4j-simple-1.7.13.jar"/>
+	<classpathentry kind="lib" path="lib/websockets/websocket-api-9.3.6.v20151106.jar"/>
+	<classpathentry kind="lib" path="lib/websockets/websocket-client-9.3.6.v20151106.jar"/>
+	<classpathentry kind="lib" path="lib/websockets/websocket-common-9.3.6.v20151106.jar"/>
+	<classpathentry kind="lib" path="lib/websockets/websocket-server-9.3.6.v20151106.jar"/>
+	<classpathentry kind="lib" path="lib/websockets/websocket-servlet-9.3.6.v20151106.jar"/>
+	<classpathentry kind="lib" path="lib/websockets/webSockets.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

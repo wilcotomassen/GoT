@@ -55,7 +55,7 @@ public class GameScene extends Scene {
 		currentX += .4f * delta;
 		
 		// Update player graph
-		float y = (1f - (float) Main.applet.mouseY / (float) Main.applet.height) * -50f;
+		float y = Main.self.distanceValue  * -50f;
 		playerPoints.add(new PVector(currentX, y, -1));
 		
 	}

@@ -3,6 +3,7 @@ package GameOfTrends;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 import com.cleverfranke.util.FileSystem;
 
 import GameOfTrends.scene.GameScene;
@@ -12,18 +13,28 @@ import GameOfTrends.scene.SceneType;
 import de.looksgood.ani.Ani;
 import processing.core.PApplet;
 import processing.core.PShape;
+import processing.data.JSONObject;
+import websockets.WebsocketClient;
 
 public class Main extends PApplet {
 	
 	// Constants
 	private final int TARGET_FPS = 60;
 	private final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;
+	private final float SENSOR_MIN = 0.1f;
+	private final float SENSOR_MAX = 0.5f;
 	
 	// Statics
 	public static PApplet applet;
+	public static Main self;
 	
 	ArrayList<PShape> lines = new ArrayList<>();
 	ArrayList<Integer> lineColors = new ArrayList<>();
+	
+	// Sensors
+	private WebsocketClient webSocket;
+	public float distanceValue;
+	public boolean buttonDown;
 	
 	// Game loop members
 	private long lastLoopTime = System.nanoTime();
@@ -41,6 +52,7 @@ public class Main extends PApplet {
 		smooth(8);
 		
 		applet = this;
+		self = this;
 	}
 	
 	public void setup() {
@@ -95,6 +107,9 @@ public class Main extends PApplet {
 		
 		// Setup painting device defaults 
 		ellipseMode(RADIUS);
+		
+		// Start the websocket
+		webSocket = new WebsocketClient(this, "ws://localhost:9010");
 	}
 	
 	public void draw() {
@@ -138,7 +153,6 @@ public class Main extends PApplet {
 		} catch (InterruptedException e) {
 			System.err.println("Thread sleep issue");
 		}
-		
 	
 	}
 	
@@ -164,5 +178,12 @@ public class Main extends PApplet {
 		PApplet.main(Main.class.getName());
 	}
 	
+	public void webSocketEvent(String msg){
+		JSONObject json = parseJSONObject(msg);
+		distanceValue = json.getFloat("sensor_0"); // Raw value
+		distanceValue = map(distanceValue, SENSOR_MIN, SENSOR_MAX, 1f, 0f); // Map to [0, 1]
+		distanceValue = min(1f, max(0f, distanceValue)); // Limit to [0, 1]
+		buttonDown = (json.getFloat("sensor_1") >= .5f);
+	}
 
 }
