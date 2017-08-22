@@ -32,6 +32,7 @@ public class Main extends PApplet {
 	ArrayList<Integer> lineColors = new ArrayList<>();
 	
 	// Sensors
+	@SuppressWarnings("unused")
 	private WebsocketClient webSocket;
 	public float distanceValue;
 	public boolean buttonDown;
@@ -75,41 +76,14 @@ public class Main extends PApplet {
 		GameScene game = new GameScene();
 		game.setup(sourceData);
 		scenes.put(GameScene.type(), game);
-		
-		gotoScene(SceneType.Intro);
-		
-		// Setup palette
-//		lineColors.add(color(25, 250, 50));
-//		lineColors.add(color(75, 25, 255));
-//		lineColors.add(color(240, 20, 255));
-//		lineColors.add(color(245, 255, 15));
-//		lineColors.add(color(30, 255, 200));
-		
-//		float xoff = 0.0f;
-//		Random colorRandom = new Random();
-//		for (int i = 0; i < 14; i++) {
-//			
-//			PShape s = createShape();
-//			s.beginShape();
-//			s.stroke(lineColors.get(colorRandom.nextInt(lineColors.size())));
-//			s.strokeWeight(4);
-//			s.noFill();
-//			for (int j = 0; j < 1000; j++) {
-//				
-//				xoff = xoff + .01f;
-//				float y = noise(xoff) * -50f;
-//				s.vertex(j, y, i * .2f); 
-//			}
-//			s.endShape();
-//			lines.add(s);
-//			
-//		}
+		gotoScene(SceneType.Game);
 		
 		// Setup painting device defaults 
 		ellipseMode(RADIUS);
 		
 		// Start the websocket
 		webSocket = new WebsocketClient(this, "ws://localhost:9010");
+		
 	}
 	
 	public void draw() {

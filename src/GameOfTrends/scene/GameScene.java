@@ -16,11 +16,11 @@ import processing.core.PVector;
 public class GameScene extends Scene {
 	
 	private final float DATAPOINT_WIDTH = 5;
+	private final float PLAYER_Z = 3;
 	
 	private SourceDataSeries sourceData;
 	private PShape sourceDataGraph;
 	private HashMap<Float, String> sourceDataGraphKeys;
-	
 	
 	private float currentX = 0;
 	private ArrayList<PVector> playerPoints = new ArrayList<>(500);
@@ -56,7 +56,7 @@ public class GameScene extends Scene {
 		
 		// Update player graph
 		float y = Main.self.distanceValue  * -50f;
-		playerPoints.add(new PVector(currentX, y, -1));
+		playerPoints.add(new PVector(currentX, y, PLAYER_Z));
 		
 	}
 	
@@ -84,9 +84,9 @@ public class GameScene extends Scene {
 		drawPlayerGraph(g);
 		
 		// Mask
-		g.noStroke();
-		g.fill(35);
-		g.rect(currentX, 1, 80, -80);
+//		g.noStroke();
+//		g.fill(35);
+//		g.rect(currentX, 1, 80, -80);
 		
 		// Draw UI
 		drawUI(g);
@@ -98,7 +98,7 @@ public class GameScene extends Scene {
 		
 		g.stroke(15, 100, 90);
 		for (int y = 0; y > -50; y -= 5) {
-			g.line(0, y, -3f, currentX, y, -3f);
+			g.line(0, y, -3f, currentX + 100f, y, -3f);
 		}
 		
 		g.popStyle();
@@ -125,6 +125,7 @@ public class GameScene extends Scene {
 	}
 	
 	private void drawPlayerGraph(PGraphics g) {
+		g.pushMatrix();
 		g.pushStyle();
 		
 		// Draw player graph
@@ -133,17 +134,26 @@ public class GameScene extends Scene {
 		PVector prevPoint = null;
 		for (PVector p: playerPoints) {
 			if (prevPoint != null) {
-				g.line(prevPoint.x, prevPoint.y, prevPoint.z, 
-						p.x, p.y, p.z);
+				g.line(prevPoint.x, prevPoint.y, prevPoint.z,  p.x, p.y, p.z);
 			}
 			prevPoint = p;
 		}
 		
+		g.translate(0,  0, PLAYER_Z);
+		g.fill(255, 0, 255);
+		g.ellipse(prevPoint.x, prevPoint.y, .3f, .3f);
+		
+		
 		//@todo: we can clear the first part of the points
 		// list, to save performance on drawing: just keep n
 		// points in the list
+		while (playerPoints.size() > 300) {
+			playerPoints.remove(0);
+		}
+			
 		
 		g.popStyle();
+		g.popMatrix();
 	}
 	
 	private void drawUI(PGraphics g) {
