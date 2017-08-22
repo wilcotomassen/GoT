@@ -4,34 +4,39 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import com.cleverfranke.util.FileSystem;
 import com.cleverfranke.util.PColor;
 
 import GameOfTrends.Main;
 import GameOfTrends.SourceDataSeries;
 import processing.core.PConstants;
 import processing.core.PGraphics;
+import processing.core.PImage;
 import processing.core.PShape;
 import processing.core.PVector;
 
 public class GameScene extends Scene {
 	
 	private final float DATAPOINT_WIDTH = 5;
-	private final float PLAYER_Z = 3;
+	private final float WALL_Z = 0;
+	private final float SOURCE_Z = 3;
+	private final float PLAYER_Z = 6;
 	
 	private SourceDataSeries sourceData;
 	private PShape sourceDataGraph;
 	private HashMap<Float, String> sourceDataGraphKeys;
-	
-	private float currentX = 0;
 	private ArrayList<PVector> playerPoints = new ArrayList<>(500);
+	
+	private float endX;	
+	private float currentX = 0;
 	
 	public void setup(SourceDataSeries sourceData) {
 
 		this.sourceData = sourceData;
-		sourceDataGraph = sourceData.getGraph(
+		sourceDataGraph = sourceData.getGameGraph(
 				0, sourceData.getRangeMax(), 
 				0, -50, 
-				-1f, 
+				SOURCE_Z, 
 				DATAPOINT_WIDTH, 
 				PColor.color(255, 255, 0));
 		
@@ -41,6 +46,8 @@ public class GameScene extends Scene {
 			float x = (float) e.getKey() * DATAPOINT_WIDTH;
 			sourceDataGraphKeys.put(x, e.getValue());
 		}
+		
+		endX = sourceData.getDataPointCount() * DATAPOINT_WIDTH;
 		
 	}
 	
@@ -58,6 +65,10 @@ public class GameScene extends Scene {
 		float y = Main.self.distanceValue  * -50f;
 		playerPoints.add(new PVector(currentX, y, PLAYER_Z));
 		
+		if (currentX >= endX) {
+			Main.triggerNextScene(SceneType.End);
+		}
+		
 	}
 	
 	public void draw(PGraphics g) {
@@ -65,7 +76,7 @@ public class GameScene extends Scene {
 		
 		// Setup camera
 		g.camera(
-				50.0f + currentX, 0, 80,	// Eye position
+				50.0f + currentX, 0, 80,		// Eye position
 				currentX, -25f, 0f, 			// Look at position
 				0.0f, 1.0f, 0.0f);				// Rotation
 		g.perspective(
@@ -83,11 +94,6 @@ public class GameScene extends Scene {
 		drawSourceGraph(g);
 		drawPlayerGraph(g);
 		
-		// Mask
-//		g.noStroke();
-//		g.fill(35);
-//		g.rect(currentX, 1, 80, -80);
-		
 		// Draw UI
 		drawUI(g);
 		
@@ -98,7 +104,7 @@ public class GameScene extends Scene {
 		
 		g.stroke(15, 100, 90);
 		for (int y = 0; y > -50; y -= 5) {
-			g.line(0, y, -3f, currentX + 100f, y, -3f);
+			g.line(0, y, WALL_Z, currentX + 100f, y, WALL_Z);
 		}
 		
 		g.popStyle();
@@ -142,7 +148,6 @@ public class GameScene extends Scene {
 		g.translate(0,  0, PLAYER_Z);
 		g.fill(255, 0, 255);
 		g.ellipse(prevPoint.x, prevPoint.y, .3f, .3f);
-		
 		
 		//@todo: we can clear the first part of the points
 		// list, to save performance on drawing: just keep n

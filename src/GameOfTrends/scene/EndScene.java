@@ -6,26 +6,25 @@ import GameOfTrends.Main;
 import processing.core.PGraphics;
 import processing.core.PImage;
 
-public class IntroScene extends Scene {
+public class EndScene extends Scene {
 	
 	private PImage background;
 	private float timer = 0;
 	
-	public IntroScene() {
-		background = Main.applet.loadImage(FileSystem.getApplicationPath("gfx/intro-bg.png"));
+	public EndScene() {
+		background = Main.applet.loadImage(FileSystem.getApplicationPath("gfx/end-bg.png"));
 	}
 	
 	@Override
 	public void onEnter() {
 		timer = 0;
 	}
-	
+
 	@Override
 	public void update(double delta) {
-		
 		timer += delta;
 		if (timer > 100f &&  Main.self.buttonDown) {
-			Main.triggerNextScene(SceneType.Game);
+			Main.triggerNextScene(SceneType.Intro);
 		}
 	}
 
@@ -35,7 +34,7 @@ public class IntroScene extends Scene {
 	}
 	
 	public static SceneType type() {
-		return SceneType.Intro;
+		return SceneType.End;
 	}
 
 }
