@@ -9,6 +9,7 @@ import com.cleverfranke.util.FileSystem;
 import GameOfTrends.Main;
 import GameOfTrends.SourceDataSeries;
 import processing.core.PConstants;
+import processing.core.PFont;
 import processing.core.PGraphics;
 import processing.core.PImage;
 import processing.core.PShape;
@@ -27,11 +28,19 @@ public class GameScene extends Scene {
 	private HashMap<Float, String> sourceDataGraphKeys;
 	private ArrayList<PVector> playerPoints = new ArrayList<>(500);
 	public ArrayList<PVector> playerScorePoints = new ArrayList<>(500);
+	public ArrayList<Particle> particles = new ArrayList<>();
+	
+	private PFont labelFont;
 	private PImage overlay;
 	
 	private float scoreStartX;
 	private float endX;	
 	private float currentX = 0;
+	private boolean sourceExploded;
+	
+	public GameScene() {
+		labelFont = Main.applet.createFont(FileSystem.getApplicationPath("gfx/W Foundry - Sonny Gothic Condensed Book.otf"), 1.4f);
+	}
 	
 	public void setup(SourceDataSeries sourceData) {
 
@@ -52,7 +61,7 @@ public class GameScene extends Scene {
 		
 		overlay = Main.applet.loadImage(FileSystem.getApplicationPath("gfx/gameplay-fg.png"));
 		
-		scoreStartX = (((float) sourceData.getDataPointCount() - 1f) * .8f) * DATAPOINT_WIDTH;
+		scoreStartX = (((float) sourceData.getDataPointCount() - 1f) * Main.SOURCEDATA_PERC) * DATAPOINT_WIDTH;
 		endX = sourceData.getDataPointCount() * DATAPOINT_WIDTH;
 		
 	}
@@ -62,6 +71,8 @@ public class GameScene extends Scene {
 		currentX = 0;
 		playerPoints.clear();
 		playerScorePoints.clear();
+		particles.clear();
+		sourceExploded = false;
 	}
 	
 	public void update(double delta) {
@@ -74,10 +85,31 @@ public class GameScene extends Scene {
 		
 		if (currentX >= scoreStartX) {
 			playerScorePoints.add(new PVector(currentX, y, PLAYER_Z));
+			
+			if (!sourceExploded) {
+				for (int i = 0; i < 100; i++) {
+					particles.add(new Particle(new PVector(currentX, y, PLAYER_Z)));
+				}
+				sourceExploded = true;
+			}
 		}
 		
 		if (currentX >= endX) {
 			Main.triggerNextScene(SceneType.End);
+		}
+		
+		// Update particles
+		for (Particle p: particles) {
+			p.update(delta);
+		}
+		
+		// Remove dead particles
+		for (int i = particles.size()-1; i >= 0; i--) {
+			Particle p = particles.get(i);
+			p.update(delta);
+			if (p.isDead()) {
+				particles.remove(i);
+			}
 		}
 		
 	}
@@ -117,6 +149,11 @@ public class GameScene extends Scene {
 		g.popMatrix();
 		g.popStyle();
 		
+		// Draw particles
+		for (Particle p: particles) {
+			p.draw(g);
+		}
+		
 		// Draw UI
 		drawUI(g);
 		
@@ -142,7 +179,8 @@ public class GameScene extends Scene {
 		
 		// Draw keys
 		g.textMode(PConstants.SHAPE);
-		g.textSize(1);
+		g.textFont(labelFont);
+		g.textLeading(1.8f);
 		g.fill(255);
 		g.textAlign(PConstants.CENTER, PConstants.TOP);
 		for (Entry<Float, String> e: sourceDataGraphKeys.entrySet()) {
@@ -208,6 +246,8 @@ public class GameScene extends Scene {
 		g.popStyle();
 	}
 	
+	
+	@SuppressWarnings("unused")
 	private void drawGizmo(PGraphics g) {
 		g.pushStyle();
 		

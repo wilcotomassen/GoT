@@ -41,7 +41,7 @@ public class DataSeries {
 		s.strokeWeight(4);
 		s.noFill();
 		
-		int endIndex = (int) (.8f * (float) values.size()); // @TODO
+		int endIndex = (int) (Main.SOURCEDATA_PERC * (float) values.size()); // @TODO
 		for (int i = 0; i < endIndex; i++) {
 			float x = (float) i * xWidth;
 			float y = PApplet.map(values.get(i), yDataMin, yDataMax, yPosMin, yPosMax);
