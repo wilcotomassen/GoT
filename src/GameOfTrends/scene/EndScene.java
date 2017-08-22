@@ -55,7 +55,7 @@ public class EndScene extends Scene {
 	@Override
 	public void update(double delta) {
 		timer += delta;
-		if (timer > 100f &&  Main.self.buttonDown) {
+		if (timer > Main.SCENE_BUTTON_TIMEOUT &&  Main.self.buttonDown) {
 			Main.triggerNextScene(SceneType.Intro);
 		}
 	}

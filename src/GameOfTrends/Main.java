@@ -21,12 +21,14 @@ public class Main extends PApplet {
 	private final float SENSOR_MIN = 0.1f;
 	private final float SENSOR_MAX = 0.5f;
 	
+	
 	// Statics
 	public static PApplet applet;
 	public static Main self;
 	
-	public static int PALETTE_PLAYERGRAPH = PColor.color(255, 0, 255);
-	public static int PALETTE_SOURCEGRAPH = PColor.color(255, 255, 0);
+	public static final int SCENE_BUTTON_TIMEOUT = 100;
+	public static final int PALETTE_PLAYERGRAPH = PColor.color(255, 0, 255);
+	public static final int PALETTE_SOURCEGRAPH = PColor.color(255, 255, 0);
 	
 	ArrayList<PShape> lines = new ArrayList<>();
 	ArrayList<Integer> lineColors = new ArrayList<>();
@@ -74,6 +76,7 @@ public class Main extends PApplet {
 		
 		// Setup scenes
 		scenes.put(IntroScene.type(), new IntroScene());
+		scenes.put(GuideScreen.type(), new GuideScreen());
 		GameScene game = new GameScene();
 		game.setup(sourceData);
 		scenes.put(GameScene.type(), game);
